@@ -2,6 +2,7 @@ import random
 import sys
 from datetime import date
 from typing import List, Union
+from abc import ABC, abstractmethod
 
 FORTUNE_OUTPUT_TEMPLATE = """
 {today} の {name} さんの運勢
@@ -24,68 +25,131 @@ class UserProfile:
         self.birthday = birthday
 
 
-class RandomFortuneTeller:
+class FortuneTeller(ABC):
+    def tell(self, user_profile: UserProfile, today: date) -> str:
+        """
+        ユーザの運勢を伝えるメソッド。
+        各子クラスでは、ラッキーカラーとラッキーナンバーをどのように決定するかを実装する。
+
+        Args:
+            user_profile (UserProfile): ユーザのプロフィール情報。
+            today (date): 今日の日付。
+
+        Returns:
+            str: 運勢の結果を含む文字列。
+        """
+        lucky_color = self._lucky_color(user_profile, today)
+        lucky_number = self._lucky_number(user_profile, today)
+
+        return FORTUNE_OUTPUT_TEMPLATE.format(
+            today=today,
+            name=user_profile.name,
+            lucky_color=lucky_color,
+            lucky_number=lucky_number,
+        )
+
+    @abstractmethod
+    def _lucky_color(self, user_profile: UserProfile, today: date) -> str:
+        """
+        ユーザのラッキーカラーを決定するメソッド。
+        各子クラスで実装する。
+
+        Args:
+            user_profile (UserProfile): ユーザのプロフィール情報。
+            today (date): 今日の日付。
+
+        Returns:
+            str: ラッキーカラーの名前。
+        """
+        pass
+
+    @abstractmethod
+    def _lucky_number(self, user_profile: UserProfile, today: date) -> int:
+        """
+        ユーザのラッキーナンバーを決定するメソッド。
+        各子クラスで実装する。
+
+        Args:
+            user_profile (UserProfile): ユーザのプロフィール情報。
+            today (date): 今日の日付。
+
+        Returns:
+            int: ラッキーナンバー。
+        """
+        pass
+
+
+class RandomFortuneTeller(FortuneTeller):
     def __init__(self, lucky_colors: List[str], lucky_numbers: List[int]) -> None:
         """
         RandomFortuneTeller クラスの初期化メソッド。
 
         Args:
-            lucky_colors (List[str]): 選択肢となるラッキーカラーのリスト
-            lucky_numbers (List[int]): 選択肢となるラッキーナンバーのリスト
+            lucky_colors (List[str]): ラッキーカラーのリスト。
+            lucky_numbers (List[int]): ラッキーナンバーのリスト。
         """
         self.lucky_colors = lucky_colors
         self.lucky_numbers = lucky_numbers
 
-    def tell(self, user_profile: UserProfile, today: date) -> str:
+    def _lucky_color(self, user_profile: UserProfile, today: date) -> str:
         """
-        与えられた UserProfile オブジェクトと今日の日付に基づいて、運勢の文字列を返す。
+        ユーザのラッキーカラーをランダムに決定する。
 
         Args:
-            user_profile (UserProfile): 運勢を占う対象の UserProfile オブジェクト。
+            user_profile (UserProfile): ユーザのプロフィール情報。
             today (date): 今日の日付。
 
         Returns:
-            str: その人物の運勢を含む文字列。
+            str: ラッキーカラーの名前。
         """
-        lucky_color = random.choice(self.lucky_colors)
-        lucky_number = random.choice(self.lucky_numbers)
+        return random.choice(self.lucky_colors)
 
-        return FORTUNE_OUTPUT_TEMPLATE.format(
-            today=today,
-            name=user_profile.name,
-            lucky_color=lucky_color,
-            lucky_number=lucky_number,
-        )
-
-
-class BirthdayBaseFortuneTeller:
-    def tell(self, user_profile: UserProfile, today: date) -> str:
+    def _lucky_number(self, user_profile: UserProfile, today: date) -> int:
         """
-        誕生日に基づいた運勢を返すメソッド。
+        ユーザのラッキーナンバーをランダムに決定する。
 
         Args:
-            user_profile (UserProfile): 運勢を占う対象の UserProfile オブジェクト。
+            user_profile (UserProfile): ユーザのプロフィール情報。
             today (date): 今日の日付。
 
         Returns:
-            str: その人物の運勢を含む文字列。
+            int: ラッキーナンバー。
+        """
+        return random.choice(self.lucky_numbers)
+
+
+class BirthdayBaseFortuneTeller(FortuneTeller):
+    def _lucky_color(self, user_profile: UserProfile, today: date) -> str:
+        """
+        ユーザの誕生日が今月であればラッキーカラーは赤、それ以外は青。
+
+        Args:
+            user_profile (UserProfile): ユーザのプロフィール情報。
+            today (date): 今日の日付。
+
+        Returns:
+            str: ラッキーカラーの名前。
         """
         if user_profile.birthday.month == today.month:
-            lucky_color = "red"
+            return "red"
         else:
-            lucky_color = "blue"
+            return "blue"
 
-        if user_profile.birthday == today:  #  TODO:後に修正
-            lucky_number = 777
+    def _lucky_number(self, user_profile: UserProfile, today: date) -> int:
+        """
+        ユーザの誕生日が今日であればラッキーナンバーは777、それ以外は0。
+
+        Args:
+            user_profile (UserProfile): ユーザのプロフィール情報。
+            today (date): 今日の日付。
+
+        Returns:
+            int: ラッキーナンバー。
+        """
+        if user_profile.birthday == today:  # TODO:後に修正
+            return 777
         else:
-            lucky_number = 0
-
-        return FORTUNE_OUTPUT_TEMPLATE.format(
-            today=today,
-            name=user_profile.name,
-            lucky_color=lucky_color,
-            lucky_number=lucky_number,
-        )
+            return 0
 
 
 def get_fortune_teller(
@@ -114,6 +178,10 @@ def get_fortune_teller(
 
 
 def main() -> None:
+    """
+    メインの処理。
+    コマンドライン引数またはデフォルトの設定で運勢を占う。
+    """
     if len(sys.argv) >= 2:
         fortune_teller_type = sys.argv[1]
     else:
