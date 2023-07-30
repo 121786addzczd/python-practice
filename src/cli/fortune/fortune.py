@@ -1,6 +1,7 @@
 import random
+import sys
 from datetime import date
-from typing import List
+from typing import List, Union
 
 FORTUNE_OUTPUT_TEMPLATE = """
 {today} の {name} さんの運勢
@@ -57,15 +58,73 @@ class RandomFortuneTeller:
         )
 
 
+class BirthdayBaseFortuneTeller:
+    def tell(self, user_profile: UserProfile, today: date) -> str:
+        """
+        誕生日に基づいた運勢を返すメソッド。
+
+        Args:
+            user_profile (UserProfile): 運勢を占う対象の UserProfile オブジェクト。
+            today (date): 今日の日付。
+
+        Returns:
+            str: その人物の運勢を含む文字列。
+        """
+        if user_profile.birthday.month == today.month:
+            lucky_color = "red"
+        else:
+            lucky_color = "blue"
+
+        if user_profile.birthday == today:  #  TODO:後に修正
+            lucky_number = 777
+        else:
+            lucky_number = 0
+
+        return FORTUNE_OUTPUT_TEMPLATE.format(
+            today=today,
+            name=user_profile.name,
+            lucky_color=lucky_color,
+            lucky_number=lucky_number,
+        )
+
+
+def get_fortune_teller(
+    fortune_teller_type: str,
+) -> Union[RandomFortuneTeller, BirthdayBaseFortuneTeller]:
+    """
+    fortune_teller_typeによって異なるFortuneTellerオブジェクトを返す。
+
+    Args:
+        fortune_teller_type (str): 選択するFortuneTellerのタイプ。
+
+    Returns:
+        Union[RandomFortuneTeller, BirthdayBaseFortuneTeller]: FortuneTellerオブジェクト。
+
+    Raises:
+        ValueError: 不明なfortune_teller_typeが指定された場合。
+    """
+    if fortune_teller_type == "random":
+        lucky_colors = ["red", "green", "blue"]
+        lucky_numbers = [1, 2, 3]
+        return RandomFortuneTeller(lucky_colors, lucky_numbers)
+    elif fortune_teller_type == "birthday":
+        return BirthdayBaseFortuneTeller()
+    else:
+        raise ValueError(f"不明なfortune_teller_type: {fortune_teller_type}")
+
+
 def main() -> None:
+    if len(sys.argv) >= 2:
+        fortune_teller_type = sys.argv[1]
+    else:
+        fortune_teller_type = "random"
+
     name = "ファルコ"
     birthday = date(2005, 4, 4)
     user_profile = UserProfile(name, birthday)
     today = date.today()
 
-    LUCKY_COLORS = ["red", "green", "blue"]
-    LUCKY_NUMBERS = [1, 2, 3]
-    fortune_teller = RandomFortuneTeller(LUCKY_COLORS, LUCKY_NUMBERS)
+    fortune_teller = get_fortune_teller(fortune_teller_type)
 
     result = fortune_teller.tell(user_profile, today)
     print(result)
