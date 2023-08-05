@@ -1,0 +1,40 @@
+banksテーブルに全角の銀行名と支店名を投入する手順
+
+1.手元に現状のbanksテーブルの全データをcsv形式で格納する。ファイル名はbanks.csvとする
+2.fetch_bank_details.pyを実行する（同階層にbanks.csvとbank_code_count.csvファイルを配置する必要がある）
+3.generate_bank_data_update.pyファイルを実行(fetch_bank_details.pyから出力されたupdate_target_bank_combination_list.csvファイルが必要)
+4.generate_bank_data_update.pyから出力された「update_banks.sql」ファイルを実行
+5.update_bank_and_branch_names.pyファイルを実行
+6.update_bank_and_branch_names.puから出力された「update_banks_and_branches.sql」ファイルを実行
+
+以上でbanksテーブルに全角の銀行名と支店名の投入は完了とする
+
+
+※ pythonファイル実行には以下の要件が必要です
+・pythonのバージョンが3.10.0以上であること
+・pandasが導入済であること pip install pandas
+・zengin-codeが導入済であること pip install zengin-code
+・jaconvが導入済であること pip install jaconv
+
+
+docker-compose.ymlファイルを使う場合
+
+# 1.downloads-notebook-1コンテナにログイン
+$ docker exec -it downloads-notebook-1 bash
+
+# 2.pandasとzengin-codeとjaconvライブラリをpipでinstall
+$ pip install pandas zengin-code jaconv
+
+# 3.python fetch_bank_details.py実行
+$ python fetch_bank_details.py
+
+# 4.generate_bank_data_update.py実行
+$ python generate_bank_data_update.py
+
+
+接続情報:
+Jupyter Lab:http://localhost:8888/lab
+phpmyadmin:http://localhost:8080/
+  -user: root
+  -password: password
+

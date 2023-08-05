@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  notebook:
+    image: jupyter/base-notebook:latest
+    command:
+      - start-notebook.sh
+      - --NotebookApp.token='' # 認証を無効化
+      - --NotebookApp.disable_check_xsrf=True # CSRFチェックを無効化
+    ports:
+      - 8888:8888
+    volumes:
+        - ./:/home/jovyan/work
+
+  mysql_py:
+    image: mysql:latest
+    container_name: mysql_py
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_ROOT_PASSWORD: password # 適宜変更
+      TZ: 'Asia/Tokyo'
+
+  phpmyadmin_py:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_py
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql_py
+    environment:
+      PMA_HOST: mysql_py
+      MYSQL_ROOT_PASSWORD: password # 適宜変更
+      UPLOAD_LIMIT: 800M
+      PHP_UPLOAD_MAX_FILESIZE: 800M
+      PHP_MAX_INPUT_VARS: 2000 # 必要に応じて追加
+
