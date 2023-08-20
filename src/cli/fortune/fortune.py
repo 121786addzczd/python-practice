@@ -18,6 +18,9 @@ class UserProfile(BaseModel):
     name: str
     birthday: date
 
+    def is_birthday(self, today: date) -> bool:
+        return self.birthday.month == today.month and self.birthday.day == today.day
+
 
 class FortuneTeller(ABC):
     def tell(self, user_profile: UserProfile, today: date) -> str:
@@ -112,7 +115,7 @@ class RandomFortuneTeller(FortuneTeller):
         return random.choice(self.lucky_numbers)
 
 
-class BirthdayBaseFortuneTeller(FortuneTeller):
+class BirthdayBasedFortuneTeller(FortuneTeller):
     def _lucky_color(self, user_profile: UserProfile, today: date) -> str:
         """
         ユーザの誕生日が今月であればラッキーカラーは赤、それ以外は青。
@@ -140,7 +143,7 @@ class BirthdayBaseFortuneTeller(FortuneTeller):
         Returns:
             int: ラッキーナンバー。
         """
-        if user_profile.birthday == today:  # TODO:後に修正
+        if user_profile.is_birthday(today):
             return 777
         else:
             return 0
@@ -148,7 +151,7 @@ class BirthdayBaseFortuneTeller(FortuneTeller):
 
 def get_fortune_teller(
     fortune_teller_type: str,
-) -> Union[RandomFortuneTeller, BirthdayBaseFortuneTeller]:
+) -> Union[RandomFortuneTeller, BirthdayBasedFortuneTeller]:
     """
     fortune_teller_typeによって異なるFortuneTellerオブジェクトを返す。
 
@@ -166,7 +169,7 @@ def get_fortune_teller(
         lucky_numbers = [1, 2, 3]
         return RandomFortuneTeller(lucky_colors, lucky_numbers)
     elif fortune_teller_type == "birthday":
-        return BirthdayBaseFortuneTeller()
+        return BirthdayBasedFortuneTeller()
     else:
         raise ValueError(f"不明なfortune_teller_type: {fortune_teller_type}")
 
