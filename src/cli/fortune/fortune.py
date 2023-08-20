@@ -1,8 +1,10 @@
+import json
 import random
 import sys
 from datetime import date
 from typing import List, Union
 from abc import ABC, abstractmethod
+from pydantic import BaseModel
 
 FORTUNE_OUTPUT_TEMPLATE = """
 {today} の {name} さんの運勢
@@ -12,17 +14,9 @@ FORTUNE_OUTPUT_TEMPLATE = """
 """
 
 
-class UserProfile:
-    def __init__(self, name: str, birthday: date) -> None:
-        """
-        UserProfile クラスの初期化メソッド。
-
-        Args:
-            name (str): ユーザの名前
-            birthday (date): ユーザの誕生日
-        """
-        self.name = name
-        self.birthday = birthday
+class UserProfile(BaseModel):
+    name: str
+    birthday: date
 
 
 class FortuneTeller(ABC):
@@ -187,9 +181,11 @@ def main() -> None:
     else:
         fortune_teller_type = "random"
 
-    name = "ファルコ"
-    birthday = date(2005, 4, 4)
-    user_profile = UserProfile(name, birthday)
+    with open("profile.json") as f:
+        profile_data = json.load(f)
+
+    user_profile = UserProfile.model_validate(profile_data)
+
     today = date.today()
 
     fortune_teller = get_fortune_teller(fortune_teller_type)

@@ -15,7 +15,7 @@ RUN pip install --upgrade pip
 RUN pip install pandas_datareader
 RUN pip install mplfinance
 RUN pip install japanize-matplotlib
-RUN pip install black ruff mypy
+RUN pip install black ruff mypy pydantic
 
 RUN wget --quiet http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -O ta-lib-0.4.0-src.tar.gz && \
     tar xvf ta-lib-0.4.0-src.tar.gz && \
