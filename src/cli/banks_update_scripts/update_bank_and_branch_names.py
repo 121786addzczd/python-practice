@@ -18,6 +18,34 @@ import jaconv
 from typing import Tuple
 
 
+# データフレーム抽出条件
+
+# 更新が必要ないもの
+BOTH_MATCH = (
+    '(bank_name_match == "〇") & '
+    '(bank_br_name_match == "〇")'
+)
+
+# 片方しか一致しておらず更新が必要
+ONE_MATCH = (
+    '((bank_name_match == "〇") & (bank_br_name_match == "×")) | '
+    '((bank_name_match == "×") & (bank_br_name_match == "〇"))'
+)
+
+# 更新データがなく今は存在していない
+BOTH_EMPTY = (
+    'bank_name_half_width_kana_update.isna() & '
+    'bank_br_name_half_width_kana_update.isna()'
+)
+
+# 銀行名と支店名両方とも変更がある
+MISMATCH_NEEDS_UPDATE = (
+    '((bank_name_match == "×") & (bank_br_name_match == "×") & '
+    'bank_name_half_width_kana_update.notna() & '
+    'bank_br_name_half_width_kana_update.notna())'
+)
+
+
 def to_half_width_kana(full_width_str: str) -> str:
     """
     全角カタカナとハイフンを半角に変換
@@ -67,6 +95,9 @@ def load_and_prepare_dataframes() -> Tuple[pd.DataFrame, pd.DataFrame]:
     df_banks["bank_br_name_half_width_kana"] = df_banks["bank_br_name"].apply(
         to_half_width_kana
     )
+    
+    # df_update_targetの重複を削除
+    df_update_target = df_update_target.drop_duplicates(subset=["bank_code", "bank_br_code"])
 
     return df_banks, df_update_target
 
@@ -77,6 +108,7 @@ def merge_and_compare_dataframes(
     """
     データフレームをマージし、名前を比較する
     """
+
     # データフレームをマージ
     df = pd.merge(
         df_banks,
@@ -154,23 +186,21 @@ def main() -> None:
     df_banks, df_update_target = load_and_prepare_dataframes()
     df = merge_and_compare_dataframes(df_banks, df_update_target)
 
-    output_and_count(df, "output_all.csv")
-    output_and_count(
-        df,
-        "output_both_match.csv",
-        '(bank_name_match == "〇") & (bank_br_name_match == "〇")',
-    )
-    df_update_needed = output_and_count(
-        df,
-        "output_one_match.csv",
-        '((bank_name_match == "〇") & (bank_br_name_match == "×")) | ((bank_name_match == "×") & (bank_br_name_match == "〇"))',
-    )
-    output_and_count(
-        df,
-        "output_both_empty.csv",
-        "bank_name_half_width_kana_update.isna() & bank_br_name_half_width_kana_update.isna()",
-    )
+    # 全データを出力
+    output_and_count(df, "bunks_all.csv")
 
+    # 条件に合致するデータを出力
+    output_and_count(df, "bunks_both_match.csv", BOTH_MATCH)
+    output_and_count(df, "bunks_one_match.csv", ONE_MATCH)
+    output_and_count(df, "bunks_both_empty.csv", BOTH_EMPTY)
+    output_and_count(df, "bunks_mismatch_needs_update.csv", MISMATCH_NEEDS_UPDATE)
+
+    # 複合条件でデータをフィルタリング
+    combined_condition = ONE_MATCH + ' | ' + MISMATCH_NEEDS_UPDATE
+    filtered_df = df.query(combined_condition)
+    df_update_needed = output_and_count(filtered_df, "bunks_update_needed.csv")
+
+    # 更新が必要なデータのSQLを生成
     generate_sql(df_update_needed)
 
 
