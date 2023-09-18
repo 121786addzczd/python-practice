@@ -1,6 +1,6 @@
 # translator.pyのGoogleTranslatorを呼び出してテスト
 # pytestを実行すると警告がでる場合は以下コマンド実行
-# pytest pytest_mock1.py -v -p no:warnings
+# pytest pytest_mock2.py -v -p no:warnings
 from translator import GoogleTranslator
 import pytest
 
