@@ -53,3 +53,15 @@ python manage.py startapp todoapp
 ```
 python manage.py runserver
 ```
+
+
+#### migrationファイル作成
+```
+python manage.py makemigrations
+```
+
+#### migrationファイルをもとにテーブル作成
+```
+python manage.py migrate
+```
+
