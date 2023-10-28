@@ -65,3 +65,15 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+#### 管理者パネルで使用するユーザーを生成
+```
+python manage.py createsuperuser
+```
+出力例:
+ユーザー名 (leave blank to use '81806'): testuser
+メールアドレス: testuser@gmail.com
+Password: 
+Password (again):
+このパスワードは ユーザー名 と似すぎています。
+Bypass password validation and create user anyway? [y/N]: y
+Superuser created successfully.
