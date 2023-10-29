@@ -13,7 +13,6 @@ from django.contrib.auth import login
 
 from todoapp.models import Task
 
-# Create your views here.
 class TaskList(LoginRequiredMixin, ListView):
     model = Task
     context_object_name = "tasks"
@@ -21,6 +20,12 @@ class TaskList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         context["tasks"] = context["tasks"].filter(user=self.request.user)
+        
+        search_input_text = self.request.GET.get("search") or ""
+        if search_input_text:
+            context["tasks"] = context["tasks"].filter(title__icontains=search_input_text)
+        
+        context["search"] = search_input_text
         return context
 
 
