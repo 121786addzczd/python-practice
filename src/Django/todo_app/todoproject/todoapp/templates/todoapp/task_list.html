@@ -2,27 +2,14 @@
 <div class="header">
   <h1>{{request.user}}のタスク</h1>
 </div>
-{% comment %} <h1>Todoリスト</h1>
-<a href="{% url 'create-task' %}">タスクの追加</a>
 
-<form method="GET">
-  <input type="text" name="search" value="{{search}}" />
-  <input type="submit" value="検索" />
-</form> {% endcomment %}
-{% comment %} 
-<table>
-  <tr>
-    <th>タスク</th>
-  </tr>
-  {% for task in tasks %}
-    <tr>
-      <td>{{task.title}}</td>
-      <td><a href="{% url 'task' task.id %}">確認</a></td>
-      <td><a href="{% url 'edit-task' task.id %}">編集</a></td>
-      <td><a href="{% url 'delete-task' task.id %}">削除</a></td>
-    </tr>
-  {% endfor %}
-</table> {% endcomment %}
+<div class="search-wrapper">
+  <form method="GET">
+    <input type="text" name="search" value="{{search}}" class="search-input"/>
+    <input type="submit" value="検索" class="search-button" />
+  </form>
+  <a href="{% url 'create-task' %}" class="add-button">+</a>
+</div>
 
 <div class="tasks-wrapper">
   {% for task in tasks %}

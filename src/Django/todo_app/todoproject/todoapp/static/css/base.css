@@ -74,3 +74,41 @@ h1 {
 .delete-button {
   color: red;
 }
+
+/* タスク検索と追加のフォーム */
+.search-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
+}
+
+.search-input {
+  height: 24px;
+  outline: none;
+  border: 1px solid lightseagreen;
+  border-radius: 5px;
+  padding: 2px 4px;
+  width: 160px;
+}
+
+.search-button {
+  border: 1px solid lightseagreen;
+  padding: 4px;
+  background-color: #fafafa;
+  color: lightseagreen;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.4s;
+}
+
+.search-button:hover {
+  background-color: lightseagreen;
+  color: white;
+}
+
+.add-button {
+  font-size: 32px;
+  color: lightseagreen
+}
