@@ -29,6 +29,7 @@
   <div class="task-wrapper">
     {% if task.completed %}
     <div class="task-title">
+      <div class="task-completed-icon"></div>
       <s><a href="{% url 'task' task.id %}">{{task}}</a></s>
     </div>
     <div>
@@ -37,6 +38,7 @@
     </div>
       {% else %}
     <div class="task-title">
+      <div class="task-incompleted-icon"></div>
       <a href="{% url 'task' task.id %}">{{task}}</a>
     </div>
     <div>
