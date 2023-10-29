@@ -20,3 +20,20 @@ a {
 h1 {
   margin: 0;
 }
+
+.header {
+  text-align: center;
+  padding: 20px 0;
+  background: rgb(2,0,36);
+  background: linear-gradient(117deg, rgba(2,0,36,1) 0%, rgba(9,9,121,0.9095127610208816) 33%, rgba(0,212,255,1) 86%);
+  border-radius: 10px 10px 0 0;
+  color: white;
+}
+
+.task-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-top: 1px solid #4646466a;
+}

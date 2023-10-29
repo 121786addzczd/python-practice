@@ -1,12 +1,15 @@
 {% extends 'todoapp/base.html' %} {% block content %}
-<h1>Todoリスト</h1>
+<div class="header">
+  <h1>{{request.user}}のタスク</h1>
+</div>
+{% comment %} <h1>Todoリスト</h1>
 <a href="{% url 'create-task' %}">タスクの追加</a>
 
 <form method="GET">
   <input type="text" name="search" value="{{search}}" />
   <input type="submit" value="検索" />
-</form>
-
+</form> {% endcomment %}
+{% comment %} 
 <table>
   <tr>
     <th>タスク</th>
@@ -19,10 +22,35 @@
       <td><a href="{% url 'delete-task' task.id %}">削除</a></td>
     </tr>
   {% endfor %}
-</table>
+</table> {% endcomment %}
+
+<div class="tasks-wrapper">
+  {% for task in tasks %}
+  <div class="task-wrapper">
+    {% if task.completed %}
+    <div class="task-title">
+      <s><a href="{% url 'task' task.id %}">{{task}}</a></s>
+    </div>
+    <div>
+      <a href="{% url 'edit-task' task.id %}" class="delete-button">編集</a>
+      <a href="{% url 'delete-task' task.id %}" class="delete-button">×</a>
+    </div>
+      {% else %}
+    <div class="task-title">
+      <a href="{% url 'task' task.id %}">{{task}}</a>
+    </div>
+    <div>
+      <a href="{% url 'edit-task' task.id %}" class="delete-button">編集</a>
+      <a href="{% url 'delete-task' task.id %}" class="delete-button">×</a>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
 <div class="login-and-logout">
   {% if request.user.is_authenticated %}
-  <p>{{request.user}}</p>
+  {% comment %} <p>{{request.user}}</p> {% endcomment %}
   <a href="{% url 'logout' %}">ログアウト</a>
   {% else %}
   <a href="{% url 'login' %}">ログイン</a>
