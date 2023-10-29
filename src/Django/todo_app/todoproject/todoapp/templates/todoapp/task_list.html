@@ -1,3 +1,7 @@
+{% if request.user.is_authenticated %}
+<p>{{request.user}}</p>
+{% endif %}
+
 <h1>Todoリスト</h1>
 <a href="{% url 'create-task' %}">タスクの追加</a>
 
