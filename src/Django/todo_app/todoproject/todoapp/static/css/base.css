@@ -67,11 +67,11 @@ h1 {
   color: #595959;
 }
 
-.edit-button {
+.edit-icon {
   color: rgb(66, 123, 66);
 }
 
-.delete-button {
+.delete-icon {
   color: red;
 }
 
@@ -89,7 +89,7 @@ h1 {
   border: 1px solid lightseagreen;
   border-radius: 5px;
   padding: 2px 4px;
-  width: 160px;
+  width: 160px !important;
 }
 
 .search-button {
@@ -103,8 +103,24 @@ h1 {
   transition: all 0.4s;
 }
 
+.delete-button:hover {
+  background-color: lightcoral;
+  color: white;
+}
+
+.delete-button {
+  border: 1px solid lightcoral;
+  padding: 4px;
+  background-color: #fafafa;
+  color: lightcoral;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.4s;
+}
+
 .search-button:hover {
-  background-color: lightseagreen;
+  background-color: lightcoral;
   color: white;
 }
 
@@ -112,3 +128,14 @@ h1 {
   font-size: 32px;
   color: lightseagreen
 }
+
+
+label {
+  display: block;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+}
+

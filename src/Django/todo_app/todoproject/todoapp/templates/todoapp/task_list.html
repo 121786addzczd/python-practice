@@ -20,8 +20,8 @@
       <s><a href="{% url 'task' task.id %}">{{task}}</a></s>
     </div>
     <div>
-      <a href="{% url 'edit-task' task.id %}" class="edit-button">&#9999;</a>
-      <a href="{% url 'delete-task' task.id %}" class="delete-button">&#128465</a>
+      <a href="{% url 'edit-task' task.id %}" class="edit-icon">&#9999;</a>
+      <a href="{% url 'delete-task' task.id %}" class="delete-icon">&#128465</a>
     </div>
       {% else %}
     <div class="task-title">
@@ -29,8 +29,8 @@
       <a href="{% url 'task' task.id %}">{{task}}</a>
     </div>
     <div>
-      <a href="{% url 'edit-task' task.id %}" class="edit-button">&#9999;</a>
-      <a href="{% url 'delete-task' task.id %}" class="delete-button">&#128465</a>
+      <a href="{% url 'edit-task' task.id %}" class="edit-icon">&#9999;</a>
+      <a href="{% url 'delete-task' task.id %}" class="delete-icon">&#128465</a>
     </div>
     {% endif %}
   </div>
