@@ -70,3 +70,8 @@ uvicorn main:app --reload
 ```
 curl localhost:8000
 ```
+
+## FastAPIドキュメント確認
+http://localhost:8000/docsにアクセスします。
+APIの更新があると自動的に内容は更新されます。
+http://localhost:8000/docs画面でAPIの動作確認を行うことができます。
