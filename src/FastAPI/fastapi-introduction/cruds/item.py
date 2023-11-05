@@ -3,7 +3,7 @@ from typing import Optional
 
 class ItemStatus(Enum):
     ON_SALE = "ON_SALE"
-    SOLD_OUT = "SPqLD_OUT"
+    SOLD_OUT = "SOLD_OUT"
 
 
 class Item:
@@ -29,3 +29,10 @@ items = [
 
 def find_all():
     return items
+
+
+def find_by_id(id: int):
+    for item in items:
+        if item.id == id:
+            return item
+    return None
