@@ -46,3 +46,15 @@ def find_by_name(name: str):
         if name in item.name:
             filtered_items.append(item)
     return filtered_items
+
+
+def create(item_create):
+    new_item = Item(
+        len(items) + 1,
+        item_create.get("name"),
+        item_create.get("price"),
+        item_create.get("description"),
+        ItemStatus.ON_SALE,
+    )
+    items.append(new_item)
+    return new_item
