@@ -76,6 +76,27 @@ curl localhost:8000
 pip install sqlalchemy
 ```
 
+sqlalchemyのモデルを使用したマイグレーションするために必要なライブラリをinstall
+```
+pip install alembic psycopg2-binary
+```
+
+migrationsディレクトリ作成
+```
+alembic init migrations
+```
+
+
+migrationsファイルを作成
+```
+alembic revision --autogenerate -m "Create items table"
+```
+
+migration実行
+```
+alembic upgrade head
+```
+
 ## FastAPIドキュメント確認
 http://localhost:8000/docsにアクセスします。
 APIの更新があると自動的に内容は更新されます。
