@@ -2,25 +2,15 @@ from sqlalchemy.orm import Session
 from schemas import ItemCreate, ItemUpdate
 from models import Item
 
-# def find_all():
-#     return items
+def find_all(db: Session):
+    return db.query(Item).all()
+
+def find_by_id(db: Session, id: int):
+    return db.query(Item).filter(Item.id == id).first()
 
 
-# def find_by_id(id: int):
-#     for item in items:
-#         if item.id == id:
-#             return item
-#     return None
-
-
-# def find_by_name(name: str):
-#     # 検索でヒットした値を保持するためのリスト
-#     filtered_items = [] 
-    
-#     for item in items:
-#         if name in item.name:
-#             filtered_items.append(item)
-#     return filtered_items
+def find_by_name(db: Session, name: str):
+    return db.query(Item).filter(Item.name.like(f"%{name}%")).all()
 
 
 def create(db: Session, item_create: ItemCreate):

@@ -12,22 +12,22 @@ DbDeoendency = Annotated[Session, Depends(get_db)]
 router = APIRouter(prefix="/items", tags=["items"])
 
 
-# @router.get("", response_model=list[ItemResponse], status_code=status.HTTP_200_OK)
-# async def find_all():
-#     return item_cruds.find_all()
+@router.get("", response_model=list[ItemResponse], status_code=status.HTTP_200_OK)
+async def find_all(db: DbDeoendency):
+    return item_cruds.find_all(db)
 
 
-# @router.get("/{id}", response_model=ItemResponse, status_code=status.HTTP_200_OK)
-# async def find_by_id(id: int=Path(gt=0)):
-#     found_item = item_cruds.find_by_id(id)
-#     if not found_item:
-#         raise HTTPException(status_code=404, detail="item not found")
-#     return found_item
+@router.get("/{id}", response_model=ItemResponse, status_code=status.HTTP_200_OK)
+async def find_by_id(db: DbDeoendency, id: int=Path(gt=0)):
+    found_item = item_cruds.find_by_id(db, id)
+    if not found_item:
+        raise HTTPException(status_code=404, detail="item not found")
+    return found_item
 
 
-# @router.get("/", response_model=list[ItemResponse], status_code=status.HTTP_200_OK)
-# async def find_by_name(name: str = Query(min_length=2, max_length=20)):
-#     return item_cruds.find_by_name(name)
+@router.get("/", response_model=list[ItemResponse], status_code=status.HTTP_200_OK)
+async def find_by_name(db: DbDeoendency, name: str = Query(min_length=2, max_length=20)):
+    return item_cruds.find_by_name(db, name)
 
 
 @router.post("", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
