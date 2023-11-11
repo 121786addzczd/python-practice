@@ -1,11 +1,5 @@
-from enum import Enum
 from typing import Optional
-from schemas import ItemCreate
-
-
-class ItemStatus(Enum):
-    ON_SALE = "ON_SALE"
-    SOLD_OUT = "SOLD_OUT"
+from schemas import ItemCreate, ItemStatus, ItemUpdate
 
 
 class Item:
@@ -62,13 +56,13 @@ def create(item_create: ItemCreate):
     return new_item
 
 
-def update(id: int, item_update):
+def update(id: int, item_update: ItemUpdate):
     for item in items:
         if item.id == id:
-            item.name = item_update.get("name", item.name)
-            item.price = item_update.get("price", item.price)
-            item.description = item_update.get("description", item.description)
-            item.status = item_update.get("status", item.status)
+            item.name = item.name if item_update.name is None else item_update.name
+            item.price = item.price if item_update.price is None else item_update.price
+            item.description = item.description if item_update.description is None else item_update.description
+            item.status = item.status if item_update.status is None else item_update.status
             return item
     return None
 
