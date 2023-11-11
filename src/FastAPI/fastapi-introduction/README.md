@@ -71,6 +71,11 @@ uvicorn main:app --reload
 curl localhost:8000
 ```
 
+データベース操作に使用するライブラリsqlalchemyをinstall
+```
+pip install sqlalchemy
+```
+
 ## FastAPIドキュメント確認
 http://localhost:8000/docsにアクセスします。
 APIの更新があると自動的に内容は更新されます。
