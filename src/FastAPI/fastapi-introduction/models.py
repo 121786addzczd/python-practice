@@ -12,7 +12,7 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
-    descripttion = Column(String, nullable=False)
+    description = Column(String, nullable=True)
     status = Column(Enum(ItemStatus), nullable=False, default=ItemStatus.ON_SALE)
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
