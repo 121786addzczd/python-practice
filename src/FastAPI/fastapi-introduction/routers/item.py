@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 from cruds import item as item_cruds
 
-router = APIRouter(prefix="/items")
+router = APIRouter(prefix="/items", tags=["items"])
 
 
 @router.get("")
