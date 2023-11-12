@@ -1,7 +1,4 @@
-from calendar import c
 from datetime import datetime
-from pydoc import describe
-from venv import create
 from sqlalchemy import Column, Integer, String, Enum, DateTime
 from database import Base
 from schemas import ItemStatus
