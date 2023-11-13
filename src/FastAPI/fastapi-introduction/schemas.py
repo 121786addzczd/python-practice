@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from ssl import SSLWantReadError
 from typing import Optional
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -51,4 +52,8 @@ class UserResponse(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-    
+
+
+class DecodedToken(BaseModel):
+    username: str
+    user_id: int
