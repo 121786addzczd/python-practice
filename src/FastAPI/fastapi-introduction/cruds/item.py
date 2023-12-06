@@ -5,8 +5,9 @@ from models import Item
 def find_all(db: Session):
     return db.query(Item).all()
 
-def find_by_id(db: Session, id: int):
-    return db.query(Item).filter(Item.id == id).first()
+
+def find_by_id(db: Session, id: int, user_id: int):
+    return db.query(Item).filter(Item.id == id).filter(Item.user_id == user_id).first()
 
 
 def find_by_name(db: Session, name: str):
