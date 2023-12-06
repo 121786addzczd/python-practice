@@ -13,10 +13,8 @@ def find_by_name(db: Session, name: str):
     return db.query(Item).filter(Item.name.like(f"%{name}%")).all()
 
 
-def create(db: Session, item_create: ItemCreate):
-    new_item = Item(
-        **item_create.model_dump()
-    )
+def create(db: Session, item_create: ItemCreate, user_id: int):
+    new_item = Item(**item_create.model_dump(), user_id=user_id)
     db.add(new_item)
     db.commit()
     return new_item

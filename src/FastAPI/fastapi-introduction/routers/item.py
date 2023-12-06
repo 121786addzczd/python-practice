@@ -2,8 +2,8 @@ from typing import Annotated
 from fastapi import APIRouter, Path, Query, HTTPException, Depends
 from sqlalchemy.orm import Session
 from starlette import status
-from cruds import item as item_cruds
-from schemas import ItemCreate, ItemUpdate, ItemResponse
+from cruds import item as item_cruds, auth as auth_cruds
+from schemas import ItemCreate, ItemUpdate, ItemResponse, DecodedToken
 from database import get_db
 
 
@@ -11,6 +11,7 @@ DbDeoendency = Annotated[Session, Depends(get_db)]
 
 router = APIRouter(prefix="/items", tags=["items"])
 
+UserDependency = Annotated[DecodedToken, Depends(auth_cruds.get_current_user)]
 
 @router.get("", response_model=list[ItemResponse], status_code=status.HTTP_200_OK)
 async def find_all(db: DbDeoendency):
@@ -31,8 +32,8 @@ async def find_by_name(db: DbDeoendency, name: str = Query(min_length=2, max_len
 
 
 @router.post("", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
-async def create(db: DbDeoendency, item_create: ItemCreate):
-    return item_cruds.create(db, item_create)
+async def create(db: DbDeoendency, user: UserDependency, item_create: ItemCreate):
+    return item_cruds.create(db, item_create, user.user_id)
 
 
 @router.put("/{id}", response_model=ItemResponse, status_code=status.HTTP_200_OK)
