@@ -1,16 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-
-
-# データベース接続に必要な情報を個別の変数に格納
-DB_USER = "fastapiuser"
-DB_PASSWORD = "fastapipass"
-DB_HOST = "0.0.0.0"
-DB_PORT = "5432"
-DB_NAME = "fleamarket"
+from config import get_settings
 
 # これらの変数を使用してSQLAlchemyのデータベースURLを設定
-SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+SQLALCHEMY_DATABASE_URL = get_settings().sqlalchemy_database_url
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

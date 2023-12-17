@@ -123,3 +123,14 @@ httpxライブラリ導入
 ```
 pip install httpx
 ```
+
+
+## 環境周りのライブラリ
+環境変数を管理するためのライブラリを導入
+```
+pip install python-dotenv
+```
+設定ファイルにおいてバリデーションを行うライブラリを導入
+```
+pip install pydantic-settings
+```
