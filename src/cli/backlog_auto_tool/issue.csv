@@ -1,0 +1,7 @@
+issueTypeId,priorityId,summary,description,assigneeId,startDate,dueDate,categoryId[]
+タスク,中,xxxxの設計,xxxxの設計,sample user,2023-04-29,2023-05-12,外部設計
+タスク,中,yyyyの設計,yyyyの設計,sample user,2023-05-13,2023-05-25,外部設計
+タスク,高,zzzzの設計,zzzzの設計,sample user,,,外部設計
+タスク,中,yyyyの設計,yyyyの設計についての詳細,sample user,2023-05-29,2023-06-14,外部設計
+タスク,中,yyyyの設計,yyyyの設計についての詳細,sample user,,,外部設計
+タスク,低,ドキュメント整理,社内wiki更新,sample user,2023-12-21,2023-12-27,ドキュメント
