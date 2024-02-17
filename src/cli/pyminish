@@ -1,0 +1,284 @@
+"""
+pyminish
+
+このスクリプトは、基本的なシェル機能を提供します。以下の組み込みコマンドが含まれています：
+- echo: 引数として与えられたテキストを出力します。
+- cd: カレントディレクトリを変更します。
+- pwd: 現在のディレクトリを表示します。
+- exit: シェルを終了します。
+- clear: ターミナルの画面をクリアします。
+- ls: 指定されたディレクトリの内容を一覧表示します。
+- history: 入力されたコマンドの履歴を表示します。
+
+また、外部コマンドの実行、リダイレクション、パイプライン処理もサポートしています。
+
+使用方法:
+    このスクリプトを直接実行すると、インタラクティブなシェルが起動します。
+    Ctrl + Cでシェルを終了できます。
+"""
+
+import os
+import sys
+import signal
+import readline
+from typing import List, Optional
+
+
+def builtin_echo(args: List[str]) -> None:
+    """標準出力に指定された引数を出力する。
+
+    Args:
+        args (List[str]): 出力する文字列のリスト。
+    """
+    print(" ".join(args))
+
+
+def builtin_cd(args: List[str]) -> None:
+    """カレントディレクトリを変更する。
+
+    Args:
+        args (List[str]): 最初の要素が変更先のパス。空の場合はユーザーのホームディレクトリに変更する。
+    """
+    try:
+        if len(args) == 0:
+            os.chdir(os.path.expanduser("~"))
+        else:
+            os.chdir(args[0])
+    except Exception as e:
+        print(f"cd: {e}")
+
+
+def builtin_pwd(args: List[str]) -> None:
+    """カレントディレクトリを出力する。"""
+    print(os.getcwd())
+
+
+def builtin_exit(args: List[str]) -> None:
+    """シェルを終了する。"""
+    exit()
+
+
+def builtin_clear(args: List[str]) -> None:
+    """ターミナルの画面をクリアする。"""
+    print("\033[H\033[2J\033[3J", end="")
+
+
+def builtin_ls(args: List[str]) -> None:
+    """指定されたディレクトリ、またはカレントディレクトリのファイルとディレクトリを一覧表示する。
+
+    Args:
+        args (List[str]): 最初の要素がリストするディレクトリ。空の場合はカレントディレクトリをリストする。
+    """
+    directory = args[0] if args else "."
+    try:
+        files = os.listdir(directory)
+        for file in files:
+            print(file)
+    except FileNotFoundError:
+        print(f"ls: {directory}: No such file or directory")
+    except PermissionError:
+        print(f"ls: {directory}: Permission denied")
+    except NotADirectoryError:
+        print(f"ls: {directory}: Not a directory")
+    except Exception as e:
+        print(f"ls: {e}")
+
+
+def builtin_history(args: List[str]) -> None:
+    """シェルで入力されたコマンドの履歴を表示する。"""
+    history_size = readline.get_current_history_length()
+    for i in range(history_size):
+        print(f"{i + 1}: {readline.get_history_item(i + 1)}")
+
+
+BUILTIN_COMMAND_FUNC_MAPPING = {
+    "echo": builtin_echo,
+    "cd": builtin_cd,
+    "pwd": builtin_pwd,
+    "exit": builtin_exit,
+    "clear": builtin_clear,
+    "ls": builtin_ls,
+    "history": builtin_history,
+}
+
+
+def find_command(command: str) -> Optional[str]:
+    """
+    指定されたコマンドの実行可能ファイルのパスを検索する。
+
+    Args:
+        command (str): 検索するコマンド名。
+
+    Returns:
+        Optional[str]: 実行可能ファイルのパス。見つからない場合はNone。
+    """
+    if "/" in command:
+        if os.path.exists(command):
+            return command
+        return None
+
+    for path_dir in os.environ["PATH"].split(":"):
+        command_path = os.path.join(path_dir, command)
+        if os.path.exists(command_path) and not os.path.isdir(command_path):
+            return command_path
+    return None
+
+
+def set_stdio(stdin_fd: Optional[int] = None, stdout_fd: Optional[int] = None) -> None:
+    """
+    標準入出力のファイル記述子を設定または更新する。
+
+    Args:
+        stdin_fd (Optional[int]): 標準入力用のファイル記述子。
+        stdout_fd (Optional[int]): 標準出力用のファイル記述子。
+    """
+    if stdin_fd is not None:
+        os.dup2(stdin_fd, sys.stdin.fileno())
+
+    if stdout_fd is not None:
+        os.dup2(stdout_fd, sys.stdout.fileno())
+
+
+def run_command(
+    tokens: List[str], stdin_fd: Optional[int] = None, stdout_fd: Optional[int] = None
+) -> None:
+    """
+    トークン化されたコマンドを実行する。
+
+    Args:
+        tokens (List[str]): コマンドとその引数を含むトークンのリスト。
+        stdin_fd (Optional[int]): 標準入力用のファイル記述子。
+        stdout_fd (Optional[int]): 標準出力用のファイル記述子。
+    """
+    command = tokens[0]
+    args = tokens[1:]
+
+    readline.add_history(" ".join(tokens))
+
+    if command in BUILTIN_COMMAND_FUNC_MAPPING:
+        default_stdin_dup_fd = os.dup(sys.stdin.fileno())
+        default_stdout_dup_fd = os.dup(sys.stdout.fileno())
+        set_stdio(stdin_fd, stdout_fd)
+
+        func = BUILTIN_COMMAND_FUNC_MAPPING[command]
+        func(args)
+
+        set_stdio(default_stdin_dup_fd, default_stdout_dup_fd)
+        os.close(default_stdin_dup_fd)
+        os.close(default_stdout_dup_fd)
+    else:
+        command_path = find_command(command)
+
+        if command_path is None:
+            print(f"{command}: command not found", file=sys.stderr)
+            return
+
+        pid = os.fork()
+
+        if pid == 0:
+            set_stdio(stdin_fd, stdout_fd)
+
+            command_basename = os.path.basename(command_path)
+            os.execve(command_path, [command_basename] + args, os.environ)
+        else:
+            os.waitpid(pid, 0)
+
+
+def interpret_line(line: str) -> None:
+    """
+    与えられた行を解釈し、適切なコマンドを実行する。
+
+    Args:
+        line (str): 解釈するコマンドラインの文字列。
+    """
+    if line.strip().startswith("#"):
+        return
+
+    tokens = line.split()
+
+    if len(tokens) == 0:
+        return
+
+    redirection_count = tokens.count(">")
+    pipe_count = tokens.count("|")
+
+    if redirection_count + pipe_count >= 2:
+        print("More than 2 redirections or pipes are not supported", file=sys.stderr)
+        return
+
+    if redirection_count == 1:
+        redirection_index = tokens.index(">")
+        command_and_args = tokens[:redirection_index]
+        stdout_file_name = tokens[redirection_index + 1]
+
+        stdout_file = open(stdout_file_name, "w")
+        stdout_fd = stdout_file.fileno()
+
+        run_command(command_and_args, stdout_fd=stdout_fd)
+
+        os.close(stdout_fd)
+
+    elif pipe_count == 1:
+        pipe_index = tokens.index("|")
+        command_and_args1 = tokens[:pipe_index]
+        command_and_args2 = tokens[pipe_index + 1 :]
+
+        pipe_r, pipe_w = os.pipe()
+
+        run_command(command_and_args1, stdout_fd=pipe_w)
+        os.close(pipe_w)
+        run_command(command_and_args2, stdin_fd=pipe_r)
+        os.close(pipe_r)
+
+    else:
+        run_command(tokens)
+
+
+def sigint_handler(signum: int, frame) -> None:
+    """
+    SIGINTシグナル（通常はCtrl+C）をハンドリングし、シェルを終了する。
+
+    Args:
+        signum (int): シグナル番号。
+        frame: 現在のスタックフレーム。
+    """
+    print("\nExiting...")
+    sys.exit(0)
+
+
+def main():
+    if len(sys.argv) >= 2:
+        file_name = sys.argv[1]
+    else:
+        file_name = None
+
+    if file_name is None:
+        # インタラクティブシェルの場合
+        signal.signal(signal.SIGINT, sigint_handler)
+
+        while True:
+            try:
+                current_directory_name = os.path.basename(os.getcwd())
+                magenta = "\033[35m"  # マゼンタ色開始
+                blue_bold = "\033[1;34m"  # 青色太字開始
+                end_of_color = "\033[0m"  # 色終了
+                prompt = f"{magenta}pyminish@{current_directory_name}{end_of_color} {blue_bold}>{end_of_color} "
+                line = input(prompt)
+                interpret_line(line)
+            except KeyboardInterrupt:
+                # Ctrl + Cが押された場合の処理
+                print("\nExiting...")
+                break
+            except EOFError:
+                # Ctrl + Dが押された場合の処理
+                print("\nExiting...")
+                break
+    else:
+        # シェルスクリプトの場合
+        with open(file_name) as f:
+            for line in f:
+                interpret_line(line)
+
+
+if __name__ == "__main__":
+    main()
