@@ -1,2 +1,3 @@
 src/pandas/.ipynb_checkpoints/*
 __pycache__/
+.env
