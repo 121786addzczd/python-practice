@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import pydeck as pdk
 
 # df = pd.DataFrame({
 #     'first column': [1, 2, 3, 4],
@@ -69,3 +70,21 @@ df_tokyo
 ## 東京の県庁所在地を中心にランダムなデータを地図にプロット
 """
 st.map(df_tokyo)
+
+"""
+## 地図グラフの表示（3次元）
+"""
+# 東京の県庁所在地周辺にこのヘキサゴンのレイヤーを描く
+view = pdk.ViewState(latitude=tokyo_lat, longitude=tokyo_lon, pitch=50, zoom=11)
+
+hexagon_layeer = pdk.Layer('HexagonLayer', # どの可視化方法か
+                           data=df_tokyo,
+                           get_position = ['lon', 'lat'],
+                           elevation_scale=6,
+                           radius=200,
+                           extruded=True
+                           )
+
+layer_map = pdk.Deck(layers=hexagon_layeer, initial_view_state=view)
+
+st.pydeck_chart(layer_map)
