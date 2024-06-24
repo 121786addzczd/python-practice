@@ -51,3 +51,21 @@ ax.plot(x, y) # 折れ線グラフ
 
 # Streamlitでpyplotをそのまま呼び出す
 st.pyplot(fig) # 注意点としてmatplotlibで生成したグラフはインタラクティブな動作ができない
+
+"""
+## 東京の県庁所在地付近のランダムなデータ
+"""
+# 東京の県庁所在地緯度経度
+tokyo_lat = 35.69
+tokyo_lon = 139.69
+
+df_tokyo = pd.DataFrame(
+    np.random.randn(1000, 2) / [50, 50] + [tokyo_lat, tokyo_lon],
+    columns=['lat', 'lon']
+)
+df_tokyo
+
+"""
+## 東京の県庁所在地を中心にランダムなデータを地図にプロット
+"""
+st.map(df_tokyo)
