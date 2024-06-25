@@ -85,3 +85,36 @@ fig = px.scatter(df_mean_bubble,
                 animation_group="年齢")
 
 st.plotly_chart(fig)
+
+
+st.header('■産業別の賃金推移')
+
+year_list = df_jp_category["集計年"].unique()
+option_year = st.selectbox(
+    '集計年',
+    (year_list))
+
+wage_list = ['一人当たり賃金（万円）', '所定内給与額（万円）', '年間賞与その他特別給与額（万円）']
+option_wage = st.selectbox(
+    '賃金の種類',
+    (wage_list))
+
+# セレクトボックスで選択されたものをデータフレーム抽出
+df_mean_categ = df_jp_category[(df_jp_category["集計年"] == option_year)]
+
+max_x = df_mean_categ[option_wage].max() + 50 # グラフ化した時に見易いように少し最大値にマージンを設ける(+50)
+# グラフの設定
+fig = px.bar(df_mean_categ,
+            x=option_wage, # x軸はセレクトボックスで選択された値
+            y="産業大分類名",
+            color="産業大分類名",
+            animation_frame="年齢",
+            range_x=[0,max_x],
+            orientation='h', # 横棒グラフ
+            width=800,
+            height=500)
+st.plotly_chart(fig)
+
+
+st.text('出典：RESAS（地域経済分析システム）')
+st.text('本結果はRESAS（地域経済分析システム）を加工して作成')
