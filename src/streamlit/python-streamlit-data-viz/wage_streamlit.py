@@ -19,6 +19,51 @@ df_pref_map = df_pref_ind[(df_pref_ind['年齢'] == '年齢計') & (df_pref_ind[
 df_pref_map = pd.merge(df_pref_map, jp_lat_lon, on='都道府県名') 
 # 最小値0, 最大値1とする正規化処理
 df_pref_map['一人当たり賃金（相対値）'] = ((df_pref_map['一人当たり賃金（万円）'] - df_pref_map['一人当たり賃金（万円）'].min()) / (df_pref_map['一人当たり賃金（万円）'].max() - df_pref_map['一人当たり賃金（万円）'].min()))
-df_pref_map
 
+# longitude,latitudeは東京の県庁所在地
+view = pdk.ViewState(
+    longitude=139.691648,
+    latitude=35.689185,
+    zoom=4,
+    pitch=40.5,
+)
+# レイヤー
+layer = pdk.Layer(
+    "HeatmapLayer",
+    data=df_pref_map,
+    opacity=0.4,
+    get_position=["lon", "lat"],
+    threshold=0.3,
+    get_weight = '一人当たり賃金（相対値）'
+)
+# レンダリング
+layer_map = pdk.Deck(
+    layers=layer,
+    initial_view_state=view,
+)
+# 表示
+st.pydeck_chart(layer_map)
+
+show_df = st.checkbox('データフレームを表示する')
+if show_df == True:
+    st.write(df_pref_map)
+
+
+
+st.header('■集計年別の一人当たり賃金（万円）の推移')
+
+df_ts_mean = df_jp_ind[(df_jp_ind["年齢"] == "年齢計")]
+df_ts_mean = df_ts_mean.rename(columns={'一人当たり賃金（万円）': '全国_一人当たり賃金（万円）'})
+
+df_pref_mean = df_pref_ind[(df_pref_ind["年齢"] == "年齢計")]
+pref_list = df_pref_mean['都道府県名'].unique()
+option_pref = st.selectbox(
+    '都道府県',
+    (pref_list))
+df_pref_mean = df_pref_mean[df_pref_mean['都道府県名'] == option_pref]
+
+df_mean_line = pd.merge(df_ts_mean, df_pref_mean, on='集計年')
+df_mean_line = df_mean_line[['集計年', '全国_一人当たり賃金（万円）', '一人当たり賃金（万円）']] # 必要な列だけに絞る
+df_mean_line = df_mean_line.set_index('集計年') # 集計年をインデックスにする
+st.line_chart(df_mean_line)
 
