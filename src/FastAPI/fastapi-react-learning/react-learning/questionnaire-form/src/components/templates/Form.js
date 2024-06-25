@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Form = () => {
   const [form, setForm] = useState({
@@ -12,6 +13,15 @@ const Form = () => {
     setForm({ ...form, [name]: value });
   };
 
+  const navigate = useNavigate();
+
+  const goToResult = () => {
+    navigate("/result");
+  };
+
+  const handleSubmit = (event) => {
+    goToResult();
+  };
 
   return (
     <>
@@ -40,11 +50,7 @@ const Form = () => {
           <textarea id="comment" name="comment" placeholder='コメントを入れてください' value={form.comment} onChange={handleInputChange}></textarea>
         </label>
       </form>
-      <p>確認用</p>
-      <p>{form.name}</p>
-      <p>{form.age}</p>
-      <p>{form.gender}</p>
-      <p>{form.comment}</p>
+      <button onClick={handleSubmit}>送信</button>
     </>
   );
 };
