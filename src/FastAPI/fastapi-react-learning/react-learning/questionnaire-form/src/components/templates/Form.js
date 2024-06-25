@@ -4,6 +4,7 @@ const Form = () => {
   const [form, setForm] = useState({
     name: "",
     age: "",
+    gender: "",
   });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -27,10 +28,17 @@ const Form = () => {
             <option value={50}>50代</option>
           </select>
         </label>
+        <br />
+        <label htmlFor="gender">性別
+          <input id="male" name="gender" type="radio" value="male" onChange={handleInputChange} />男性
+          <input id="female" name="gender" type="radio" value="female" onChange={handleInputChange} />女性
+          <input id="other" name="gender" type="radio" value="other" onChange={handleInputChange} />その他
+        </label>
       </form>
       <p>確認用</p>
       <p>{form.name}</p>
       <p>{form.age}</p>
+      <p>{form.gender}</p>
     </>
   );
 };
