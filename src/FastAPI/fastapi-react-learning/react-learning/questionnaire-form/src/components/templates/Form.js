@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 
 const Form = () => {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    age: "",
+  });
   const handleInputChange = (event) => {
-    setName(event.target.value);
+    const { name, value } = event.target;
+    setForm({ ...form, [name]: value });
   };
-  const handleAgeChange = (event) => {
-    setAge(event.target.value);
-  };
+
 
   return (
     <>
       <form>
         <label htmlFor="name">名前
-          <input id="name" type="text" name="name" value={name} onChange={handleInputChange} />
+          <input id="name" type="text" name="name" value={form.name} onChange={handleInputChange} />
         </label>
         <br />
         <label htmlFor="age">年齢
-          <select id="age" onChange={handleAgeChange}>
+          <select id="age" name="age" value={form.age} onChange={handleInputChange} >
             <option value={10}>10代</option>
             <option value={20}>20代</option>
             <option value={30}>30代</option>
@@ -28,8 +29,8 @@ const Form = () => {
         </label>
       </form>
       <p>確認用</p>
-      <p>{name}</p>
-      <p>{age}</p>
+      <p>{form.name}</p>
+      <p>{form.age}</p>
     </>
   );
 };
