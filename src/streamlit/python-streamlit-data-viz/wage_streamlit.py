@@ -67,3 +67,21 @@ df_mean_line = df_mean_line[['集計年', '全国_一人当たり賃金（万円
 df_mean_line = df_mean_line.set_index('集計年') # 集計年をインデックスにする
 st.line_chart(df_mean_line)
 
+
+
+st.header('■年齢階級別の全国一人あたり平均賃金（万円）')
+
+df_mean_bubble = df_jp_ind[df_jp_ind['年齢'] != '年齢計'] # 年齢計の行は除外
+# バルチャートで表示する
+fig = px.scatter(df_mean_bubble,
+                x="一人当たり賃金（万円）",
+                y="年間賞与その他特別給与額（万円）",
+                range_x=[150,700],
+                range_y=[0,150],
+                size="所定内給与額（万円）",
+	            size_max = 38, # 2010〜2019年の所定内給与額（万円）の最大に近い数値を設定
+                color="年齢", # 色分けする
+                animation_frame="集計年", # 集計年ごとの推移をみたい
+                animation_group="年齢")
+
+st.plotly_chart(fig)
