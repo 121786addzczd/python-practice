@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const Form = () => {
@@ -16,12 +16,12 @@ const Form = () => {
 
   const navigate = useNavigate();
 
-  const goToResult = () => {
-    navigate("/result");
+  const goToResult = (form) => {
+    navigate("/result", { state: form });
   };
 
   const handleSubmit = (event) => {
-    goToResult();
+    goToResult(form);
   };
 
   return (
@@ -52,7 +52,6 @@ const Form = () => {
         </label>
       </form>
       <button onClick={handleSubmit}>送信</button>
-      <Link to="/result">結果頁へ</Link>
     </>
   );
 };
