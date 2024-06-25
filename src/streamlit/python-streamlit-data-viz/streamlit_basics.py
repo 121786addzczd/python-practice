@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import pydeck as pdk
+from PIL import Image
 
 # df = pd.DataFrame({
 #     'first column': [1, 2, 3, 4],
@@ -88,3 +89,12 @@ hexagon_layeer = pdk.Layer('HexagonLayer', # どの可視化方法か
 layer_map = pdk.Deck(layers=hexagon_layeer, initial_view_state=view)
 
 st.pydeck_chart(layer_map)
+
+
+
+"""
+## 画像の表示
+"""
+image = Image.open('images/cat0045-026.jpg')
+
+st.image(image, caption='子猫', use_column_width=True)
