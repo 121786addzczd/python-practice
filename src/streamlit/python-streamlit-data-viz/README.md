@@ -3,5 +3,17 @@
 ## streamlit の起動
 
 ```shell
-streamlit run streamlit_basics.py
+# 書式
+streamlit run <streamlitを起動したいファイルPATH>
+
+# 例
+streamlit run wage_streamlit.py
+```
+
+## ライブラリのインストール
+
+以下のコマンドを実行して、requirements.txt ファイルに記載されているライブラリをインストールします。
+
+```shell
+pip install -r requirements.txt
 ```
