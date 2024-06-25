@@ -5,6 +5,7 @@ const Form = () => {
     name: "",
     age: "",
     gender: "",
+    comment: "",
   });
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -34,11 +35,16 @@ const Form = () => {
           <input id="female" name="gender" type="radio" value="female" onChange={handleInputChange} />女性
           <input id="other" name="gender" type="radio" value="other" onChange={handleInputChange} />その他
         </label>
+        <br />
+        <label htmlFor="comment">コメント
+          <textarea id="comment" name="comment" placeholder='コメントを入れてください' value={form.comment} onChange={handleInputChange}></textarea>
+        </label>
       </form>
       <p>確認用</p>
       <p>{form.name}</p>
       <p>{form.age}</p>
       <p>{form.gender}</p>
+      <p>{form.comment}</p>
     </>
   );
 };
