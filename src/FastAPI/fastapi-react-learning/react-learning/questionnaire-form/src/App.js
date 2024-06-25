@@ -1,10 +1,15 @@
 import './App.css';
-import Form from './components/templates/Form';
+import { Routes, Route } from 'react-router-dom';
+import Submit from './components/pages/Submit';
+import Result from './components/pages/Result';
 
 function App() {
   return (
     <>
-      <Form />
+      <Routes>
+        <Route path="/" element={<Submit />} />
+        <Route path="/result" element={<Result />} />
+      </Routes>
     </>
   );
 }
