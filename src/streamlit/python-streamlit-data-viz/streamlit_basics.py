@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pydeck as pdk
 from PIL import Image
+import time
 
 # df = pd.DataFrame({
 #     'first column': [1, 2, 3, 4],
@@ -98,3 +99,78 @@ st.pydeck_chart(layer_map)
 image = Image.open('images/cat0045-026.jpg')
 
 st.image(image, caption='子猫', use_column_width=True)
+
+
+"""
+## インタラクティブ機能
+"""
+option_button = st.button('ボタン')
+
+if option_button == True:
+    st.write('ボタンが押されました')
+else:
+    st.write('ボタンを押してください')
+    
+# ラジオボタン
+option_radio_button = st.radio(
+    "好きな食べ物を選択してください",
+    ('りんご', 'バナナ', 'オレンジ', 'その他')
+)
+
+st.write('あなたが選んだ果物は：', option_radio_button)
+
+
+option_checkbox = st.checkbox('DataFreamの表示')
+
+df = pd.DataFrame({
+    'first column': [1, 2, 3, 4],
+    'second column': [40, 30, 20, 10]
+})
+
+if option_checkbox == True:
+    st.write(df)
+    
+option_selectbox = st.selectbox(
+    'どれか一つ選択してください',
+    ('A', 'B', 'C'))
+st.write('あなたが選んだのは；', option_selectbox)
+
+# マルチセレクト
+option_multi_select = st.multiselect(
+    '好きな色を選択してください',
+    ['緑', '黄色', '赤', '青'],
+    ['黄色', '赤'] # デフォルトの選択
+)
+
+# スライダー
+age = st.slider('あなたの年齢を教えてください', min_value=0, max_value=130, step=1, value=20)
+st.write('私の年齢は', age, 'です')
+
+values = st.slider(
+    '数値の範囲を入力してください',
+    0.0, 100.0, (25.0, 75.0)
+)
+st.write('Values:', values)
+
+
+# サイドバー
+height = st.sidebar.slider('あなたの身長(cm)を入力してください', min_value=0, max_value=200, step=1, value=170)
+st.write('私の身長は', height, 'cmです')
+
+gender = st.sidebar.selectbox(
+    'あなたの性別を教えてください',
+    ['男性', '女性']
+)
+st.write('あなたの性別は：', gender)
+
+# プログレスバー
+progres_button = st.button('プログレスボタン')
+if progres_button == True:
+    st.write('処理を開始します')
+    my_bar = st.progress(0)
+    for percent_comlete in range(100):
+        time.sleep(0.01)
+        my_bar.progress(percent_comlete + 1)
+    st.text('処理が終了しました')
+else:
+    st.write('プログレスボタンを押してください')
