@@ -20,7 +20,7 @@ const Login = () => {
   const onClickLogin = () => {
     console.log("ログイン処理開始")
     const endpoint = "https://jsonplaceholder.typicode.com/users";
-    const queries = { username: user.username }
+    const queries = { username: user.username, id: user.password }
     axios.get(endpoint, { params: queries }).then((res) => {
       // 処理成功時 status 200
       console.log("===== res", res);
