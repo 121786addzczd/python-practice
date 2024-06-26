@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Box, Typography, TextField, Button } from '@mui/material';
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -13,6 +14,16 @@ const Login = () => {
     console.log(`name:${name}`)
     console.log(`value:${value}`)
     setUser({ ...user, [name]: value });
+  };
+
+  const onClickLogin = () => {
+    console.log("ログイン処理開始")
+    const endpoint = "https://jsonplaceholder.typicode.com/users";
+    axios.get(endpoint).then((res) => {
+      // 処理成功時 status 200
+      console.log("===== res", res);
+      console.log("===== res.data", res.data);
+    })
   };
 
   return (
@@ -48,7 +59,7 @@ const Login = () => {
             onChange={handleChange}
           />
 
-          <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
+          <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={onClickLogin} >
             ログイン
           </Button>
 
