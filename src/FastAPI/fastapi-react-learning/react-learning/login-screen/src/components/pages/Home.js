@@ -1,8 +1,12 @@
 import React from 'react';
+import Header from "../templates/Header";
 
 const Home = () => {
   return (
-    <div>ホーム画面</div>
+    <>
+      <Header />
+      ホーム画面
+    </>
   )
 }
 
