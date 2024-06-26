@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Container, Box, Typography, TextField, Button } from '@mui/material';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -27,11 +28,14 @@ const Login = () => {
       console.log(res.data[0]);
       if (res.data[0] === undefined) {
         console.log("ログイン失敗");
+        navigate("/loginfailed");
       } else {
         console.log("ログイン成功");
+        navigate("/");
       }
     });
   };
+
 
   return (
     <>
