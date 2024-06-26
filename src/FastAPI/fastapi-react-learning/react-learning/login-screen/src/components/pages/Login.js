@@ -31,7 +31,7 @@ const Login = () => {
         navigate("/loginfailed");
       } else {
         console.log("ログイン成功");
-        navigate("/");
+        navigate("/", { state: { username: "テストユーザー"} });
       }
     });
   };

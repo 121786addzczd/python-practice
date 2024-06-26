@@ -6,7 +6,7 @@ import BasicMenu from "../elements/BasicMenu";
 import { Grid } from "@mui/material";
 
 
-const Header = () => {
+const Header = (props) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -15,6 +15,7 @@ const Header = () => {
             <BasicMenu />
           </Grid>
           <Grid item xs={6} sx={{ py: 1 }}>
+            {props.name}
             <Typography variant="p" component="div" sx={{ flexGrow: 1 }}>
               ログインユーザ：
             </Typography>
