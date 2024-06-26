@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Box, Typography, TextField, Button } from '@mui/material';
 import { Link } from "react-router-dom"; 
 
 const Login = () => {
+  const [user, setUser] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    console.log(`name:${name}`)
+    console.log(`value:${value}`)
+    setUser({ ...user, [name]: value });
+  };
+
   return (
     <>
       <Container maxWidth="xs">
@@ -21,6 +33,7 @@ const Login = () => {
             name="username"
             label="名前"
             id="username"
+            onChange={handleChange}
           />
 
           <TextField
@@ -32,6 +45,7 @@ const Login = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleChange}
           />
 
           <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
