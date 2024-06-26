@@ -24,6 +24,12 @@ const Login = () => {
       // 処理成功時 status 200
       console.log("===== res", res);
       console.log("===== res.data", res.data);
+      console.log(res.data[0]);
+      if (res.data[0] === undefined) {
+        console.log("ログイン失敗");
+      } else {
+        console.log("ログイン成功");
+      }
     });
   };
 
