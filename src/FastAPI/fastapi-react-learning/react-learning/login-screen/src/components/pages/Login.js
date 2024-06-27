@@ -5,7 +5,7 @@ import axios from "axios";
 import { LoginUserContext } from '../providers/LoginUserProvider'; // 修正箇所
 
 const Login = () => {
-  const { setLoginUser } = useContext(LoginUserContext); // 修正箇所
+  const { setLoginUser, setIsLogined } = useContext(LoginUserContext); // 修正箇所
   const navigate = useNavigate();
   const [user, setUser] = useState({
     username: "",
@@ -24,7 +24,8 @@ const Login = () => {
       if (res.data[0] === undefined) {
         navigate("/loginfailed");
       } else {
-        setLoginUser(res.data[0].username); // 修正箇所
+        setLoginUser(res.data[0].username);
+        setIsLogined(true);
         navigate("/", { state: { username: "テストユーザー"} });
       }
     });
