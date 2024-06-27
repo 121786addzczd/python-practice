@@ -1,12 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Container, Box, Typography, TextField, Button } from '@mui/material';
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { LoginUserContext } from '../providers/LoginUserProvider'; // 修正箇所
+import { Link } from "react-router-dom";
+import { useLogin } from '../hooks/useLogin';
+
 
 const Login = () => {
-  const { setLoginUser, setIsLogined } = useContext(LoginUserContext); // 修正箇所
-  const navigate = useNavigate();
+  const {login} = useLogin();
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -18,17 +17,7 @@ const Login = () => {
   };
 
   const onClickLogin = () => {
-    const endpoint = "https://jsonplaceholder.typicode.com/users";
-    const queries = { username: user.username, id: user.password };
-    axios.get(endpoint, { params: queries }).then((res) => {
-      if (res.data[0] === undefined) {
-        navigate("/loginfailed");
-      } else {
-        setLoginUser(res.data[0].username);
-        setIsLogined(true);
-        navigate("/", { state: { username: "テストユーザー"} });
-      }
-    });
+    login(user);
   };
 
   return (
