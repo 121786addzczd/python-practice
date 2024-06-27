@@ -38,3 +38,26 @@ async def read_item(skip: int = 0, limit: int = 10):
 @app.post("/items/")
 async def create_item(item: Item):
     return item
+
+
+# シンプルなAPI作成(パスパラメータ)
+fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+@app.get("/fake_items/{item_id}")
+async def read_fake_item(item_id: int):
+    return fake_items_db[item_id]
+
+
+# シンプルなAPI作成(クエリパラメータ)
+@app.get("/fake_items")
+async def read_fake_item_2(item_id: int):
+    return fake_items_db[item_id]
+
+
+class Person(BaseModel):
+    name: str
+    age: int
+    gender: Union[str, None] = None
+    
+@app.post("/person")
+def create_person(person: Person):
+    return person
