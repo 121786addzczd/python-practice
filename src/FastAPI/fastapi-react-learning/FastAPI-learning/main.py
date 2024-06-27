@@ -14,8 +14,8 @@ app = FastAPI()
 
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+async def read_main():
+    return {"msg": "Hello World"}
 
 
 # パスパラメータ
