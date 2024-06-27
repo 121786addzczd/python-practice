@@ -5,7 +5,8 @@ import LoginFailed from './components/pages/LoginFailed';
 import Register from './components/pages/Register';
 import NotFound from './components/pages/NotFound';
 import { Routes, Route } from 'react-router-dom';
-import { LoginUserProvider } from "./components/providers/LoginUserProvider";
+import { LoginUserProvider } from './components/providers/LoginUserProvider';
+import Footer from './components/templates/Footer';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/notfound" element={<NotFound />} />
         </Routes>
       </div>
+      <Footer />
     </LoginUserProvider>
   );
 }
