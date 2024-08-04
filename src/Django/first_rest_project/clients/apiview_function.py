@@ -7,3 +7,6 @@ response = requests.post(url, data={"timezone": "US/Easter"})
 print("status_code:", response.status_code)
 print(response.text)
 print(response.headers)
+
+if response.status_code == 400:
+    print('実行失敗')
