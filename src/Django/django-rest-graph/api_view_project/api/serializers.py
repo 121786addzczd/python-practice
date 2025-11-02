@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import Item
 
 def check_divide_by_ten(value):
     if value % 10 != 0:
@@ -30,3 +31,13 @@ class ItemsSerializer(serializers.Serializer):
         if discounted_price>= price:
             raise serializers.ValidationError('割引き価格は通常価格よりも低く設定してください')
         return data
+    
+    def create(self, validated_data):
+        print("create 実行")
+        print(validated_data)
+        return Item.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        print("update 実行")
+        print(instance)
+        print(validated_data)
