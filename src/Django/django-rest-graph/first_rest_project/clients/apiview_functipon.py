@@ -9,3 +9,7 @@ response = requests.post(url, data={"timezone": 'US/Easter'}) # timezone値が�
 print(f"status_code={response.status_code}")
 print(f"response_text={response.text}")
 print(f"response_headers={response.headers}")
+
+# クライアント側の処理
+if response.status_code == 400:
+    print('実行失敗')
