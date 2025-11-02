@@ -6,6 +6,7 @@ def check_divide_by_ten(value):
         raise serializers.ValidationError('10で割り切れる値にしてください')
 
 class ItemsSerializer(serializers.Serializer):
+    pk = serializers.ReadOnlyField()
     name = serializers.CharField(max_length=20)
     price = serializers.IntegerField(min_value=0)
     discounted_price = serializers.IntegerField(min_value=0, validators=[check_divide_by_ten,]) # 割引き価格
