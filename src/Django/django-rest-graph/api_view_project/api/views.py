@@ -3,12 +3,15 @@ from rest_framework.response import Response
 from .serializers import ItemsSerializer
 
 class ItemView(APIView):
+
+    serializer_class = ItemsSerializer
+
     def get(self, request):
         return Response({'message': 'This is a GET request'})
     
     def post(self, request):
         print(f"Request Data={request.data}")
-        serializer = ItemsSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         print(serializer)
 
         # バリデーション

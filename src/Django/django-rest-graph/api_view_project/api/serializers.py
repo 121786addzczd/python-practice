@@ -1,9 +1,13 @@
 from rest_framework import serializers
 
+def check_divide_by_ten(value):
+    if value % 10 != 0:
+        raise serializers.ValidationError('10で割り切れる値にしてください')
+
 class ItemsSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=20)
     price = serializers.IntegerField(min_value=0)
-    discounted_price = serializers.IntegerField(min_value=0) # 割引き価格
+    discounted_price = serializers.IntegerField(min_value=0, validators=[check_divide_by_ten,]) # 割引き価格
 
     def validate_name(self, value): # nameに対するバリデーション
         print(f"name={value}")
