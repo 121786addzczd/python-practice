@@ -1,15 +1,29 @@
 from rest_framework import serializers
 from api.models import Item
+from rest_framework.validators import UniqueTogetherValidator
 
 def check_divide_by_ten(value):
     if value % 10 != 0:
         raise serializers.ValidationError('10で割り切れる値にしてください')
 
 class ItemModelSerializer(serializers.ModelSerializer):
+    discounted_price = serializers.IntegerField(min_value=0, validators=[check_divide_by_ten,]) # 割引き価格
 
     class Meta:
-        model = Item 
-        fields = '__all__'
+        model = Item
+        # fields = '__all__'
+        fields = ['pk', 'name', 'price', 'discounted_price'] # 表示する値を指定
+        # read_only_fields = ['price']
+        # extra_kwargs = {
+        #     'name': {'write_only' : True, 'required': False} # nam4は書き込み専用にして必須ではない設定
+        # }
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Item.objects.all(),
+                fields=['name', 'price'],
+                message='nameとpriceの組み合わせは同じ値にできません'
+            )
+        ]
 
     def validate_name(self, value): # nameに対するバリデーション
         if self.partial and value is None: # patchの場合はスキップ
