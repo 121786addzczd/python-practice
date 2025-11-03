@@ -2,11 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import ItemModelSerializer
 from rest_framework import status
+from rest_framework import permissions
 from api.models import Item
 
 class ItemModelView(APIView):
 
     serializer_class = ItemModelSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
 
     def get(self, request): # 一覧
         items = Item.objects.all()

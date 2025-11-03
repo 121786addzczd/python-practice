@@ -34,3 +34,14 @@ python manage.py migrate
 
 本プロジェクトでは SQLite を使用しています。
 データベースの中身を確認するには、VSCode の拡張機能 [alexcvzz.vscode-sqlite](https://marketplace.visualstudio.com/items?itemName=alexcvzz.vscode-sqlite) を使用すると便利です。
+
+## 管理者ユーザー作成
+
+まだ管理者ユーザーを作成していない場合は、manage.py があるディレクトリで以下のコマンドを実行して作成します。
+
+```bash
+python manage.py createsuperuser
+```
+
+作成した管理者ユーザーでログインするには、ブラウザで http://127.0.0.1:8000/admin にアクセスし、先ほど設定したユーザー情報でログインします。<br>
+また、Django Rest Framework（DRF）で permissions.IsAuthenticatedOrReadOnly などの認証が必要な処理を実行する際、この管理者ユーザーを利用して確認できます。
