@@ -3,12 +3,14 @@ from rest_framework.response import Response
 from .serializers import ItemModelSerializer
 from rest_framework import status
 from rest_framework import permissions
+from .permissions import CustomPermission
 from api.models import Item
 
 class ItemModelView(APIView):
 
     serializer_class = ItemModelSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
+    permission_classes = [CustomPermission]
 
     def get(self, request): # 一覧
         items = Item.objects.all()
@@ -27,6 +29,7 @@ class ItemModelView(APIView):
 class ItemModelDetailView(APIView):
 
     serializer_class = ItemModelSerializer
+    permission_classes = [CustomPermission]
 
     def get(self, request, pk):
         item = Item.objects.get(pk=pk)
