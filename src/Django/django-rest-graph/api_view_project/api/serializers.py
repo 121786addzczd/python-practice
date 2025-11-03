@@ -31,8 +31,8 @@ class ItemsSerializer(serializers.Serializer):
     # 複数のデータにまたがっててのバリデーション
     def validate(self, data):
         print(f"data: {data}")
-        price = data.get('price', self.instance.price)
-        discounted_price = data.get('discounted_price', self.instance.discounted_price) 
+        price = data.get('price', self.instance.price if self.instance else None)
+        discounted_price = data.get('discounted_price', self.instance.discounted_price if self.instance else None) 
         if discounted_price>= price:
             raise serializers.ValidationError('割引き価格は通常価格よりも低く設定してください')
         return data
